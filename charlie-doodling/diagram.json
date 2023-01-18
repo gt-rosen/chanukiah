@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "author": "Anonymous maker",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-arduino-uno", "id": "uno", "top": 0, "left": 0, "attrs": {} },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": -103.62,
+      "left": 314.84,
+      "attrs": { "color": "yellow" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led2",
+      "top": -109.33,
+      "left": 270.33,
+      "attrs": { "color": "limegreen" }
+    },
+    {
+      "type": "wokwi-led-bar-graph",
+      "id": "bargraph1",
+      "top": -165.47,
+      "left": 130.27,
+      "attrs": { "color": "BCYR" }
+    },
+    {
+      "type": "wokwi-led-bar-graph",
+      "id": "bargraph2",
+      "top": -167.45,
+      "left": 200.74,
+      "attrs": { "color": "BCYR" }
+    }
+  ],
+  "connections": [
+    [ "led1:C", "uno:2", "green", [ "v16.23", "h-0.19", "v23.41", "h-93.15" ] ],
+    [ "led1:A", "uno:3", "green", [ "h0.82", "v45.69", "h-113.66" ] ],
+    [ "led2:C", "uno:3", "green", [ "v59.56", "h-58.33" ] ],
+    [ "led2:A", "uno:2", "green", [ "v64.23", "h-58.83" ] ],
+    [ "bargraph1:A10", "uno:8", " ", [ "*", "*" ] ],
+    [ "bargraph1:C10", "uno:9", " ", [ "*", "*" ] ],
+    [ "bargraph1:A9", "uno:8", " ", [ "*", "*" ] ],
+    [ "bargraph1:C9", "uno:10", " ", [ "*", "*" ] ],
+    [ "bargraph1:A8", "uno:8", " ", [ "*", "*" ] ],
+    [ "bargraph1:C8", "uno:11", " ", [ "*", "*" ] ],
+    [ "bargraph1:A7", "uno:9", " ", [ "*", "*" ] ],
+    [ "bargraph1:C7", "uno:8", " ", [ "*", "*" ] ],
+    [ "bargraph1:A6", "uno:9", " ", [ "*", "*" ] ],
+    [ "bargraph1:C6", "uno:10", " ", [ "*", "*" ] ],
+    [ "bargraph1:A5", "uno:9", " ", [ "*", "*" ] ],
+    [ "bargraph1:C5", "uno:11", " ", [ "*", "*" ] ],
+    [ "bargraph1:A4", "uno:10", " ", [ "*", "*" ] ],
+    [ "bargraph1:C4", "uno:8", " ", [ "*", "*" ] ],
+    [ "bargraph1:A3", "uno:10", " ", [ "*", "*" ] ],
+    [ "bargraph1:C3", "uno:9", " ", [ "*", "*" ] ],
+    [ "bargraph1:A2", "uno:10", " ", [ "*", "*" ] ],
+    [ "bargraph1:C2", "uno:11", " ", [ "*", "*" ] ],
+    [ "bargraph1:A1", "uno:11", " ", [ "*", "*" ] ],
+    [ "bargraph1:C1", "uno:8", " ", [ "*", "*" ] ],
+    [ "bargraph2:A10", "uno:4", " ", [ "*", "*" ] ],
+    [ "bargraph2:C10", "uno:5", " ", [ "*", "*" ] ],
+    [ "bargraph2:A9", "uno:4", " ", [ "*", "*" ] ],
+    [ "bargraph2:C9", "uno:6", " ", [ "*", "*" ] ],
+    [ "bargraph2:A8", "uno:4", " ", [ "*", "*" ] ],
+    [ "bargraph2:C8", "uno:7", " ", [ "*", "*" ] ],
+    [ "bargraph2:A7", "uno:5", " ", [ "*", "*" ] ],
+    [ "bargraph2:C7", "uno:4", " ", [ "*", "*" ] ],
+    [ "bargraph2:A6", "uno:5", " ", [ "*", "*" ] ],
+    [ "bargraph2:C6", "uno:6", " ", [ "*", "*" ] ],
+    [ "bargraph2:A5", "uno:5", " ", [ "*", "*" ] ],
+    [ "bargraph2:C5", "uno:7", " ", [ "*", "*" ] ],
+    [ "bargraph2:A4", "uno:6", " ", [ "*", "*" ] ],
+    [ "bargraph2:C4", "uno:4", " ", [ "*", "*" ] ],
+    [ "bargraph2:A3", "uno:6", " ", [ "*", "*" ] ],
+    [ "bargraph2:C3", "uno:5", " ", [ "*", "*" ] ],
+    [ "bargraph2:A2", "uno:6", " ", [ "*", "*" ] ],
+    [ "bargraph2:C2", "uno:7", " ", [ "*", "*" ] ],
+    [ "bargraph2:A1", "uno:7", " ", [ "*", "*" ] ],
+    [ "bargraph2:C1", "uno:5", " ", [ "*", "*" ] ]
+  ],
+  "dependencies": {}
+}
