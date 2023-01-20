@@ -1,51 +1,55 @@
 /**
   Flame-free chanukiah!
-  Perfect for pets, apartments, and any other situation where fire is a bad idea. 
+  Perfect for pets, apartments, and any other situation where fire is a bad idea.
 
-  To use:  
-    1. click green ">" button to start the program running. 
-    2. click yellow circle button to light the shamash. 
-    3.  
+  To use:
+    1. click green ">" button to start the program running.
+    2. click yellow circle button to light the shamash.
+    3. for each candle you want to light,
+       click the red LDR sensor below the candle and drag the slider to the right.
+    4. enjoy watching the candles burn!
+    5. once all the candles have burned out, press the gray square STOP button 
+       or refresh your browser window to reset the simulation.
 
-  ***How to change candle colors: 
+  ***How to change candle colors:
+      in the "diagram.json" tab, find the "wokwi-led-bar-graph" elements. these are the candles! 
+      for the candle you want, put in the hex code for your desired color, ex. "#FFFF00" 
+      ***special candle color gradient codes:
+         "BCYR": blue, cyan, yellow, red
+         "GYR": green, yellow, red
 
-     special candle color gradients: 
-     "BCYR": blue, cyan, yellow, red 
-     "GYR": green, yellow, red
-
-  *** How to change burn duration: 
+  *** How to change burn duration:
       use #define DRIP_ROLL_MAX, DRIP_CUTOFF_REG, DRIP_CUTOFF_LAST to change the burn duration!
-      defaults (180,10,2) burn for about 5 minutes. 
-      DRIP_ROLL_MAX: increase this to make candles burn for longer overall. 
-      DRIP_CUTOFF_REG: increase this to make candles to burn more unevenly. 
+      defaults (1080,7,2) burn for about 15-25 minutes, hopefully.
+      (360,7,2) burns for about 7-12 minutes.
+      DRIP_ROLL_MAX: increase this to make candles burn for longer overall.
+      DRIP_CUTOFF_REG: increase this to make candles to burn more unevenly.
       DRIP_CUTOFF_LAST: decrease this (don't go less than 1) to make the last nub of a candle last longer.
 
 
-  Implementation info: 
-    this code uses Charlieplexing to light a large number of LEDs using relatively few pins! 
+  Implementation info:
+    this code uses Charlieplexing to light a large number of LEDs using relatively few pins!
     read more about Charlieplexing here: https://en.wikipedia.org/wiki/Charlieplexing
 
   by G Rosen
 */
 
-/* TODO: consider, do i need the burning state? some kind of "at rest"/burned out state?
-*/
+//TODO: do we want an enforced drip once every 5 minutes or so? 
 
 #define LEDS_PER_CANDLE 10
 #define LED_PIN_COUNT 4
 #define NUM_CANDLES 9
 #define SCAN_DELAY 1
-#define DISABLE_LDR 99 
+#define DISABLE_LDR 99
 
-#define DRIP_ROLL_MAX 360
-#define DRIP_CUTOFF_REG 10
-#define DRIP_CUTOFF_LAST 2 
+#define DRIP_ROLL_MAX 1080
+#define DRIP_CUTOFF_REG 7
+#define DRIP_CUTOFF_LAST 2
 
 
 
 #define WAITING 1
 #define LIGHTING 2
-#define BURNING 3
 
 struct candleStruct {
   uint8_t setLedPins[LED_PIN_COUNT];
@@ -63,7 +67,7 @@ struct candleStruct {
 //Pins n states
 const uint8_t lighterPin = 2;
 uint8_t chanukiahState = 0;
-unsigned long prevMillisDrip = 0; 
+unsigned long prevMillisDrip = 0;
 
 candleStruct candle0 = {
   {4, 5, 6, 7},
@@ -146,7 +150,7 @@ candleStruct candle3 = {
 };
 
 candleStruct candle4 = {
-  {20,21,22,23},
+  {20, 21, 22, 23},
   { {20, 21},
     {20, 22},
     {20, 23},
@@ -166,7 +170,7 @@ candleStruct candle4 = {
 };
 
 candleStruct candle5 = {
-  {24,25,26,27},
+  {24, 25, 26, 27},
   { {24, 25},
     {24, 26},
     {24, 27},
@@ -185,7 +189,7 @@ candleStruct candle5 = {
   A4
 };
 candleStruct candle6 = {
-  {28,29,30,31},
+  {28, 29, 30, 31},
   { {28, 29},
     {28, 30},
     {28, 31},
@@ -204,7 +208,7 @@ candleStruct candle6 = {
   A5
 };
 candleStruct candle7 = {
-  {32,33,34,35},
+  {32, 33, 34, 35},
   { {32, 33},
     {32, 34},
     {32, 35},
@@ -223,7 +227,7 @@ candleStruct candle7 = {
   A6
 };
 candleStruct candle8 = {
-  {36,37,38,39},
+  {36, 37, 38, 39},
   { {36, 37},
     {36, 38},
     {36, 39},
@@ -240,11 +244,10 @@ candleStruct candle8 = {
   500,
   1,
   A7
-}; 
+};
 
-candleStruct allCandles[NUM_CANDLES] = {candle0, candle1, candle2, candle3, candle4, 
-                                                 candle5, candle6, candle7, candle8};
-
+candleStruct allCandles[NUM_CANDLES] = {candle0, candle1, candle2, candle3, candle4,
+                                        candle5, candle6, candle7, candle8};
 
 void setup() {
   // set pins
@@ -255,7 +258,7 @@ void setup() {
 
   chanukiahState = WAITING;
 
-  Serial.begin(96500); // for debugging 
+  Serial.begin(96500); // for debugging
 }
 
 void loop() {
@@ -278,21 +281,17 @@ void loop() {
         if (allCandles[i].height == 0 && currentLdrPin != DISABLE_LDR) {
           stillLighting = 1;
           // if the candle's not lit yet, check its ldr
-            int ldrVal = analogRead(allCandles[i].ldrPin);
-            //  Serial.println("candle:"+ String(i)+ " pin: " + String(allCandles[i].ldrPin)+ " ldrVal: " + String(ldrVal));
-            if (ldrVal < 200) {
-              //when each candle is lit, initialize its height
-              allCandles[i].height = LEDS_PER_CANDLE;
-              allCandles[i].ldrPin = DISABLE_LDR; //special value so we don't read the ldr again after we've lit a candle once
-            }
-          
+          int ldrVal = analogRead(allCandles[i].ldrPin);
+          //  Serial.println("candle:"+ String(i)+ " pin: " + String(allCandles[i].ldrPin)+ " ldrVal: " + String(ldrVal));
+          if (ldrVal < 200) {
+            //when each candle is lit, initialize its height
+            allCandles[i].height = LEDS_PER_CANDLE;
+            allCandles[i].ldrPin = DISABLE_LDR; //special value so we don't read the ldr again after we've lit a candle once
+          }
+
         }
       }
-      if (!stillLighting) {
-        chanukiahState = BURNING;
-      }
       break;
-      //no special actions to do for state BURNING 
     default:
       Serial.println("how'd you get into the default case?");
       break;
@@ -338,7 +337,7 @@ void loop() {
               allCandles[k].flickerDuration = (random(4) + 1) * 100;
               allCandles[k].flickerState = !allCandles[k].flickerState;
               if (allCandles[k].height == 1 ) {
-                //Sputter if candle is low; ON is shorter, OFF is more varied + possibly longer 
+                //Sputter if candle is low; ON is shorter, OFF is more varied + possibly longer
                 if (allCandles[k].flickerState) {
                   allCandles[k].flickerDuration = (random(3) + 1) * 10;
                 } else {
@@ -373,21 +372,21 @@ void loop() {
 
   //roll to drip
   unsigned long currentMillisDrip = millis();
-  if (currentMillisDrip - prevMillisDrip > 1000 ){
-    prevMillisDrip = currentMillisDrip; 
-  for (int i = 0; i < NUM_CANDLES; i++) {
-    if (allCandles[i].height > 0) {
-      int dripRoll = random(DRIP_ROLL_MAX);
-      int dripMin = DRIP_CUTOFF_REG; 
-      //linger a bit on the last LED
-      if (allCandles[i].height == 1) {
-        dripMin = DRIP_CUTOFF_LAST; 
-      }
-      if (dripRoll < dripMin) {
-        allCandles[i].height--;
+  if (currentMillisDrip - prevMillisDrip > 1000 ) {
+    prevMillisDrip = currentMillisDrip;
+    for (int i = 0; i < NUM_CANDLES; i++) {
+      if (allCandles[i].height > 0) {
+        int dripRoll = random(DRIP_ROLL_MAX);
+        int dripMin = DRIP_CUTOFF_REG;
+        //linger a bit on the last LED
+        if (allCandles[i].height == 1) {
+          dripMin = DRIP_CUTOFF_LAST;
+        }
+        if (dripRoll < dripMin) {
+          allCandles[i].height--;
+        }
       }
     }
-  }
   }
 
 }
