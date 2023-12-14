@@ -3,6 +3,9 @@ An Arduino-based, flame-free chanukiah with festive burning action!
 
 Perfect for pets, apartments, and any other situation where fire is a bad idea. 
 
+![](images/full-lit.png)
+
+
 ## Using the online simulated version 
 1. Go to https://wokwi.com/projects/353600148292695041 
 1. Press the green ">" button to start the simulation. 
